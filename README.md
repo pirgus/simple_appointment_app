@@ -1,16 +1,18 @@
 # simple_appointments_agenda
 
-A new Flutter project.
+This is a simple appointments agenda app that allows you to create, read and update appointments
+(deleting appointment is still in progress :)).
 
-## Getting Started
+This application uses the library provided by SIMFORM, available [here](https://pub.dev/packages/calendar_view). 
+Thank you, SIMFORM! 
 
-This project is a starting point for a Flutter application.
+## How to run the app
+You simply need to have flutter installed on your machine and 
+run the following command in the project's root directory:
 
-A few resources to get you started if this is your first Flutter project:
+```
+flutter run
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Keep in mind that if you want to test the application on a mobile device, you'll have to connect a
+physical device with development options enabled OR use an emulator.
