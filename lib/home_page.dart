@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Image(
                     image: AssetImage('assets/images/logo_sante_login.png'))),
             ListTile(
-              iconColor: _viewType == DAY ? Colors.blue : Colors.black,
+              iconColor: _viewType == DAY ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface,
               leading: const Icon(Icons.calendar_view_day),
               title: const Text('Dia'),
               onTap: () {
@@ -107,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              iconColor: _viewType == WEEK ? Colors.blue : Colors.black,
+              iconColor: _viewType == WEEK ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface,
               leading: const Icon(Icons.calendar_view_week),
               title: const Text('Semana'),
               onTap: () {
@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              iconColor: _viewType == MONTH ? Colors.blue : Colors.black,
+              iconColor: _viewType == MONTH ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface,
               leading: const Icon(Icons.calendar_today),
               title: const Text('Mês'),
               onTap: () {
@@ -142,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
             showHalfHours: showHalfHour,
             showQuarterHours: showQuarterHour,
             weekPageHeaderBuilder: (startDate, endDate) => Container(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.surface,
               child: TextButton(
                 onPressed: () {
                   showDatePicker(
@@ -159,13 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       errorInvalidText: 'Data inválida',
                       builder: (context, child) {
                         return Theme(
-                          data: ThemeData.light().copyWith(
-                            colorScheme: const ColorScheme.light(
-                              primary: Color.fromARGB(255, 2, 159, 243),
-                              onPrimary: Colors.white,
-                            ),
-                            dialogBackgroundColor: Colors.white,
-                          ),
+                          data: Theme.of(context),
                           child: child!,
                         );
                       }).then((picked) => {
@@ -187,8 +181,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             '${monthTitles[startDate.month - 1]} ${startDate.year}',
-                            style: const TextStyle(
-                              color: Colors.black,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
                               // fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -219,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Text(
                     weekTitles[day.weekday - 1],
                     style: const TextStyle(
-                        color: Colors.black,
+                        // color: Colors.black,
                         fontSize: 8),
                   ),
                   Text(
@@ -340,8 +334,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            // onPageChange: (date, pageIndex) => print("$date, $pageIndex"),
-            // onEventTap: (events, date) => print(events),
             onDateTap: (date) =>
                 navigateToAppointmentRegistration(context, date, controller, null),
           ),

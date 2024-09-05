@@ -59,16 +59,23 @@ class _AppointmentRegistrationState extends State<AppointmentRegistration> {
     selectedDate = widget.date;
     selectedEndDate = selectedDate.add(const Duration(hours: 1));
     selectedInitTime = TimeOfDay.fromDateTime(selectedDate);
-    selectedEndTime = TimeOfDay.fromDateTime(selectedDate.add(const Duration(hours: 1)));
+    // verifica se houver hora de termino no atributo de evento, para evitar
+    // aplicar o periodo de 1h ja que nao necessariamente os eventos tem essa
+    // duracao
+    selectedEndTime = TimeOfDay.fromDateTime(
+        widget.event?.endTime ?? selectedDate.add(const Duration(hours: 1))
+    );
     selectedColor =  widget.event?.color ?? colors.entries.first.value;
         begTimeTextController.value = TextEditingValue(
       text:
-          '${selectedInitTime.hour}:${selectedInitTime.minute == 0 ? '00' : selectedInitTime.minute}',
+          '${selectedInitTime.hour}:${selectedInitTime.minute == 0 ? '00' :
+                                                    selectedInitTime.minute}',
     );
 
     endTimeTextController.value = TextEditingValue(
       text:
-          '${selectedEndTime.hour}:${selectedEndTime.minute == 0 ? '00' : selectedEndTime.minute}',
+          '${selectedEndTime.hour}:${selectedEndTime.minute == 0 ? '00' :
+                                                    selectedEndTime.minute}',
     );
 
     begTimeTextController.addListener(_printLatestValueOfBegTime);
@@ -127,6 +134,14 @@ class _AppointmentRegistrationState extends State<AppointmentRegistration> {
     widget.calendar.add(appointment);
   }
 
+  void removeAppointment() {
+    widget.calendar.remove(widget.event!);
+    Navigator.pop(context);
+  }
+
+  FocusNode customerDropdown = FocusNode();
+  FocusNode professionalDropdown = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,6 +159,7 @@ class _AppointmentRegistrationState extends State<AppointmentRegistration> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                     child: DropdownMenu(
+                      focusNode: customerDropdown,
                         searchCallback:
                             (List<DropdownMenuEntry<String>> entries,
                                 String query) {
@@ -170,6 +186,7 @@ class _AppointmentRegistrationState extends State<AppointmentRegistration> {
                           setState(() {
                             selectedCustomer = value!;
                           });
+                          customerDropdown.unfocus();
                         },
                         dropdownMenuEntries: customers
                             .map<DropdownMenuEntry<String>>((String value) {
@@ -179,10 +196,23 @@ class _AppointmentRegistrationState extends State<AppointmentRegistration> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                     child: DropdownMenu(
+                      focusNode: professionalDropdown,
                       initialSelection: selectedProfessional,
                         width: 400,
                         enableFilter: true,
                         enableSearch: true,
+                        searchCallback:
+                            (List<DropdownMenuEntry<String>> entries,
+                            String query) {
+                          final int index = entries.indexWhere(
+                                  (DropdownMenuEntry<String> entry) =>
+                                  entry.label.contains(query));
+                          if (index == -1) {
+                            print('nao encontrou resultado');
+                            return null;
+                          }
+                          return index;
+                        },
                         label: const Text(PROFESSIONALS_LABEL),
                         requestFocusOnTap: true,
                         // trailingIcon: const Icon(Icons.perso),
@@ -191,6 +221,7 @@ class _AppointmentRegistrationState extends State<AppointmentRegistration> {
                           setState(() {
                             selectedProfessional = value!;
                           });
+                          professionalDropdown.unfocus();
                         },
                         dropdownMenuEntries: professionals
                             .map<DropdownMenuEntry<String>>((String value) {
@@ -239,10 +270,10 @@ class _AppointmentRegistrationState extends State<AppointmentRegistration> {
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                     child: Wrap(spacing: 20, children: [
                       SizedBox(
-                        width: 175,
+                        width: MediaQuery.of(context).size.width / 2 - 30,
                         child: TextFormField(
                           keyboardType: TextInputType.datetime,
                           controller: begTimeTextController,
@@ -264,7 +295,7 @@ class _AppointmentRegistrationState extends State<AppointmentRegistration> {
                         ),
                       ),
                       SizedBox(
-                        width: 175,
+                        width: MediaQuery.of(context).size.width / 2 - 30,
                         child: TextFormField(
                           keyboardType: TextInputType.datetime,
                           controller: endTimeTextController,
@@ -285,14 +316,46 @@ class _AppointmentRegistrationState extends State<AppointmentRegistration> {
                           },
                         ),
                       ),
-                    ]),
+                    ],
+                    ),
                   ),
-                  ElevatedButton(
-                      onPressed: () {
-                        saveAppointment();
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Salvar e voltar'))
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      widget.event != null ? Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 8.0, 0),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all<Color>(
+                                Theme.of(context).colorScheme.error),
+                          ),
+                          onPressed: () {
+                            removeAppointment();
+                          },
+                          child: Text(
+                            'Excluir',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.surface),
+                          ),
+                        ),
+                      ) : const SizedBox.shrink(),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                              Theme.of(context).colorScheme.primary),
+                        ),
+                          onPressed: () {
+                            saveAppointment();
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'Salvar e voltar',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.surface),
+                          ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),

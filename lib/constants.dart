@@ -1,5 +1,6 @@
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 const DAY = 0;
 const WEEK = 1;
@@ -75,3 +76,14 @@ InputDecoration inputDecorationForm(String label, BuildContext context) {
     ),
   );
 }
+
+const locales = <Locale>[
+  Locale('pt', 'BR'),
+  Locale('en'),
+  Locale('es')];
+
+const globalMaterialLocalizations = [
+  GlobalMaterialLocalizations.delegate,
+  GlobalWidgetsLocalizations.delegate,
+  GlobalCupertinoLocalizations.delegate,
+];

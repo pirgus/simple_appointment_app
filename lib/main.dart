@@ -1,6 +1,6 @@
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'constants.dart';
 import 'home_page.dart';
 import 'main_theme.dart';
 
@@ -22,16 +22,8 @@ class MyApp extends StatelessWidget {
         home: const Scaffold(
           body: MyHomePage(title: 'calendar_view Example'),
         ),
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const <Locale>[
-          Locale('pt', 'BR'),
-          Locale('en'),
-          Locale('es'),
-        ],
+        localizationsDelegates: globalMaterialLocalizations,
+        supportedLocales: locales,
       ),
     );
   }
