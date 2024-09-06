@@ -360,7 +360,16 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           onDateTap: (date) =>
-              navigateToAppointmentRegistration(context, date, controller, null),
+              navigateToAppointmentRegistration(
+                  context,
+                  date,
+                  controller,
+                  null),
+          onEventTap: (events, date) => navigateToAppointmentRegistration(
+              context,
+              events[0].startTime!,
+              controller,
+              events[0] as CustomEvent),
         ),
         MONTH => MonthView(
           controller: controller,
